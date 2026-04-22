@@ -1,7 +1,7 @@
 # Software Requirements Specification (SRS)  
 **Project:** Centralized Intelligence Operations Platform (CIOP)  
 **Version:** 1.0 – 2026‑04‑22  
-**Prepared by:** Senior AI Systems Architect & Software Engineer  
+**Prepared by:** Manjunatha Ramappa Yerdummi - Senior AI Systems Architect & Software Engineer  
 **Audience:** Product Owners, Development Teams, QA, Security & Compliance, Operations
 
 ---
