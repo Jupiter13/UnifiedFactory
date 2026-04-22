@@ -417,7 +417,7 @@ workflow.set_end("allocate")
 ---
 
 **Prepared by:**  
-Senior AI Systems Architect & Software Engineer  
+Manjunatha Yerdummi Ramappa - Senior AI Systems Architect & Software Engineer  
 Date: 2026‑04‑22
 
 ---
