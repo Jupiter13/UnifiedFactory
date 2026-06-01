@@ -1,0 +1,156 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install ruff mypy
+
+      - name: Run Ruff
+        run: |
+          ruff check afw_d/
+
+      - name: Run MyPy
+        run: |
+          mypy afw_d/ || true
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: lint
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: afwd
+          POSTGRES_PASSWORD: afwdpassword
+          POSTGRES_DB: afwd
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest tests/ -v --cov=afw_d --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: https://afwd.example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: '3.14.0'
+
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Deploy to Kubernetes
+        run: |
+          helm upgrade --install afwd-engine ./helm \
+            --namespace afwd \
+            --create-namespace \
+            --set image.tag=${{ github.sha }} \
+            --wait --timeout 5m

@@ -1,0 +1,66 @@
+version: 1.0
+
+params:
+  - name: image_name
+    value: ghcr.io/yourorg/afwd-engine
+  - name: dockerfile_path
+    value: Dockerfile
+
+options:
+  - name: docker
+    value: true
+
+provisioner_template:
+  - name: docker
+    version: 1.0
+
+  containers:
+    - name: afwd-design-engine
+      image: ${ image_name }:${ tag }
+      port: 8000
+      replicas: 2
+      resources:
+        cpu: 4
+        memory: 16GB
+        gpu: 1
+      health_check:
+        path: /health
+        interval: 30s
+      env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: LOG_LEVEL
+          value: INFO
+        - name: REDIS_URL
+          value: redis://redis:6379
+        - name: DATABASE_URL
+          value: postgresql://postgres:password@postgres:5432/afwd
+
+    - name: afwd-sim
+      image: ${ image_name }:${ tag }-sim
+      replicas: 1
+      resources:
+        cpu: 8
+        memory: 32GB
+
+    - name: afwd-cad
+      image: ${ image_name }:${ tag }-cad
+      replicas: 1
+      resources:
+        cpu: 4
+        memory: 8GB
+
+    - name: faiss-vector-store
+      image: faiss-cpu:latest
+      replicas: 1
+      resources:
+        cpu: 2
+        memory: 4GB
+
+    - name: fastapi-gateway
+      image: ${ image_name }:${ tag }
+      port: 8080
+      replicas: 2
+      resources:
+        cpu: 2
+        memory: 4GB
