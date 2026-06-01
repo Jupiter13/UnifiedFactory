@@ -1,0 +1,76 @@
+{
+  "engines": [
+    {
+      "id": "lycoming_io720",
+      "name": "Lycoming IO-720",
+      "type": "piston",
+      "thrust_newtons": 29420,
+      "fuel_flow_kg_s": 0.055,
+      "weight_kg": 240,
+      "cost_usd": 35000,
+      "specific_fuel_consumption": 0.22,
+      "max_altitude_m": 6100,
+      "description": "8-cylinder horizontally opposed piston engine"
+    },
+    {
+      "id": "lycoming_io540",
+      "name": "Lycoming IO-540",
+      "type": "piston",
+      "thrust_newtons": 19613,
+      "fuel_flow_kg_s": 0.038,
+      "weight_kg": 195,
+      "cost_usd": 28000,
+      "specific_fuel_consumption": 0.23,
+      "max_altitude_m": 5500,
+      "description": "8-cylinder horizontally opposed piston engine"
+    },
+    {
+      "id": "continental_tsio550",
+      "name": "Continental TSIO-550",
+      "type": "turbosupercharged_piston",
+      "thrust_newtons": 23640,
+      "fuel_flow_kg_s": 0.048,
+      "weight_kg": 230,
+      "cost_usd": 32000,
+      "specific_fuel_consumption": 0.24,
+      "max_altitude_m": 7600,
+      "description": "Turbocharged 6-cylinder piston engine"
+    },
+    {
+      "id": "potez_4e",
+      "name": "Potez 4E",
+      "type": "turboprop",
+      "thrust_newtons": 44000,
+      "fuel_flow_kg_s": 0.065,
+      "weight_kg": 185,
+      "cost_usd": 85000,
+      "specific_fuel_consumption": 0.36,
+      "max_altitude_m": 9000,
+      "description": "Turboprop engine for medium aircraft"
+    },
+    {
+      "id": "potez_6e",
+      "name": "Potez 6E",
+      "type": "turboprop",
+      "thrust_newtons": 65000,
+      "fuel_flow_kg_s": 0.095,
+      "weight_kg": 240,
+      "cost_usd": 120000,
+      "specific_fuel_consumption": 0.38,
+      "max_altitude_m": 9500,
+      "description": "High-power turboprop engine"
+    },
+    {
+      "id": "williams_fj33",
+      "name": "Williams FJ33-5A",
+      "type": "turbofan",
+      "thrust_newtons": 88960,
+      "fuel_flow_kg_s": 0.082,
+      "weight_kg": 272,
+      "cost_usd": 180000,
+      "specific_fuel_consumption": 0.45,
+      "max_altitude_m": 12500,
+      "description": "Small turbofan for jets and turboprop conversion"
+    }
+  ]
+}

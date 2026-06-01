@@ -1,0 +1,107 @@
+# AeroDesign-AI Compliance Rules
+# Rules are evaluated against the generated geometry
+
+rules:
+  - id: stall_speed_min
+    name: "Minimum Stall Speed"
+    description: "Stall speed must be at least 60 knots for safety"
+    condition: "geometry.stall_speed_kt >= 60"
+    severity: "critical"
+    message: "Stall speed must be at least 60 knots"
+
+  - id: takeoff_field_length
+    name: "Take-off Field Length"
+    description: "Take-off field length must not exceed 1500 meters"
+    condition: "geometry.takeoff_field_length_m <= 1500"
+    severity: "critical"
+    message: "Take-off field length exceeds 1500m limit"
+
+  - id: landing_field_length
+    name: "Landing Field Length"
+    description: "Landing field length must not exceed 1200 meters"
+    condition: "geometry.landing_field_length_m <= 1200"
+    severity: "critical"
+    message: "Landing field length exceeds 1200m limit"
+
+  - id: max_takeoff_weight
+    name: "Maximum Take-off Weight"
+    description: "Maximum take-off weight must not exceed 10000 kg"
+    condition: "geometry.max_takeoff_weight_kg <= 10000"
+    severity: "critical"
+    message: "Maximum take-off weight exceeds 10000 kg limit"
+
+  - id: wing_loading_max
+    name: "Maximum Wing Loading"
+    description: "Wing loading should not exceed 500 kg/m² for safety"
+    condition: "geometry.wing_loading_kg_m2 <= 500"
+    severity: "warning"
+    message: "Wing loading exceeds recommended maximum of 500 kg/m²"
+
+  - id: aspect_ratio_range
+    name: "Aspect Ratio Bounds"
+    description: "Wing aspect ratio should be between 5 and 15 for conventional designs"
+    condition: "5 <= geometry.aspect_ratio <= 15"
+    severity: "warning"
+    message: "Aspect ratio outside recommended range of 5-15"
+
+  - id: glide_ratio_min
+    name: "Minimum Glide Ratio"
+    description: "Lift-to-drag ratio should be at least 8 for efficient flight"
+    condition: "geometry.lift_to_drag_ratio >= 8"
+    severity: "warning"
+    message: "Glide ratio below minimum of 8"
+
+  - id: structural_margin_positive
+    name: "Structural Safety Margin"
+    description: "Structural margin must be positive (indicating safety factor)"
+    condition: "geometry.structural_margin > 0"
+    severity: "critical"
+    message: "Negative structural safety margin detected"
+
+  - id: engine_clearance
+    name: "Engine Nacelle Clearance"
+    description: "Engine nacelle must maintain adequate clearance from ground"
+    condition: "geometry.engine_clearance_m >= 0.3"
+    severity: "critical"
+    message: "Insufficient engine ground clearance"
+
+  - id: tail_strike
+    name: "Tail Strike Prevention"
+    description: "Tail should not strike ground during rotation"
+    condition: "geometry.tail_clearance_m >= 0.2"
+    severity: "warning"
+    message: "Risk of tail strike during takeoff"
+
+  - id: cruise_climb_gradient
+    name: "Second Segment Climb Gradient"
+    description: "Must meet 2.4% climb gradient requirement for certification"
+    condition: "geometry.climb_gradient_percent >= 2.4"
+    severity: "critical"
+    message: "Climb gradient below certification requirement"
+
+weight_limits:
+  empty_weight_fraction:
+    min: 0.4
+    max: 0.6
+    description: "Empty weight as fraction of MTOW"
+  
+  fuel_weight_fraction:
+    min: 0.1
+    max: 0.3
+    description: "Fuel weight as fraction of MTOW"
+
+performance_targets:
+  cruise_speed_kt:
+    min: 150
+    max: 450
+    description: "Cruise speed in knots"
+  
+  range_nm:
+    min: 500
+    max: 5000
+    description: "Range in nautical miles"
+  
+  stall_speed_kt:
+    min: 60
+    max: 120
+    description: "Stall speed in knots"
