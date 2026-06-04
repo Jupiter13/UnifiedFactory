@@ -1,0 +1,70 @@
+{
+  "materials": [
+    {
+      "id": "al7075_t6",
+      "name": "Aluminum 7075-T6",
+      "density_kg_m3": 2810,
+      "tensile_strength_pa": 5.24e8,
+      "youngs_modulus_pa": 7.2e10,
+      "yield_strength_pa": 4.63e8,
+      "cost_per_kg": 12.50,
+      "manufacturability_score": 0.9,
+      "description": "High-strength aluminum alloy, aerospace grade"
+    },
+    {
+      "id": "al2024_t3",
+      "name": "Aluminum 2024-T3",
+      "density_kg_m3": 2780,
+      "tensile_strength_pa": 4.83e8,
+      "youngs_modulus_pa": 7.3e10,
+      "yield_strength_pa": 3.45e8,
+      "cost_per_kg": 10.80,
+      "manufacturability_score": 0.92,
+      "description": "Aluminum alloy with good fatigue resistance"
+    },
+    {
+      "id": "ti6al4v",
+      "name": "Titanium Ti-6Al-4V",
+      "density_kg_m3": 4430,
+      "tensile_strength_pa": 9.5e8,
+      "youngs_modulus_pa": 1.14e11,
+      "yield_strength_pa": 8.8e8,
+      "cost_per_kg": 45.00,
+      "manufacturability_score": 0.7,
+      "description": "Titanium alloy for high-stress applications"
+    },
+    {
+      "id": "cf_epoxy",
+      "name": "Carbon Fiber Reinforced Epoxy",
+      "density_kg_m3": 1600,
+      "tensile_strength_pa": 6.0e8,
+      "youngs_modulus_pa": 7.0e10,
+      "yield_strength_pa": 5.0e8,
+      "cost_per_kg": 85.00,
+      "manufacturability_score": 0.65,
+      "description": "Advanced composite for weight-critical structures"
+    },
+    {
+      "id": "al6061_t6",
+      "name": "Aluminum 6061-T6",
+      "density_kg_m3": 2700,
+      "tensile_strength_pa": 3.1e8,
+      "youngs_modulus_pa": 6.9e10,
+      "yield_strength_pa": 2.76e8,
+      "cost_per_kg": 8.50,
+      "manufacturability_score": 0.95,
+      "description": "General-purpose aluminum alloy"
+    },
+    {
+      "id": "steel4130",
+      "name": "Chromoly Steel AISI 4130",
+      "density_kg_m3": 7850,
+      "tensile_strength_pa": 5.6e8,
+      "youngs_modulus_pa": 2.05e11,
+      "yield_strength_pa": 4.6e8,
+      "cost_per_kg": 6.00,
+      "manufacturability_score": 0.88,
+      "description": "Chromium-molybdenum alloy steel"
+    }
+  ]
+}
