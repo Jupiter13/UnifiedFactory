@@ -1,0 +1,128 @@
+# LangSmith Configuration for EDU_CENTRE AI
+# 
+# LangSmith provides tracing, metrics, and evaluation for LLM applications.
+# This configuration enables observability for the agent graph.
+
+langsmith:
+  # API Configuration
+  api_key: ${LANGSMITH_API_KEY}  # Set via environment variable
+  endpoint: https://api.smith.langchain.com
+  project: edu-centre-ai
+  
+  # Tracing Configuration
+  tracing:
+    enabled: true
+    # Trace node execution
+    trace_nodes: true
+    # Include tool inputs/outputs
+    trace_tools: true
+    # Include LLM calls
+    trace_llm: true
+    
+  # Metadata
+  tags:
+    - edu-centre
+    - ai-agent
+    - langgraph
+  description: EDU_CENTRE AI Agentic Layer
+
+  # Filtering
+  filter:
+    # Only trace certain users (optional)
+    # allowed_users:
+    #   - user_123
+    #   - user_456
+    
+    # Exclude certain intents from tracing
+    excluded_intents:
+      - health_check
+      - ping
+
+# Prometheus Metrics
+metrics:
+  enabled: true
+  port: 9090
+  
+  # Custom metrics
+  custom_metrics:
+    - name: ai_latency
+      type: histogram
+      description: AI response latency in milliseconds
+      buckets: [10, 50, 100, 200, 500, 1000]
+      
+    - name: tool_calls
+      type: counter
+      description: Number of tool calls made
+      
+    - name: intent_classification
+      type: counter
+      description: Intent classification counts
+      labels:
+        - intent
+        
+    - name: recommendation_requests
+      type: counter
+      description: Number of recommendation requests
+      
+    - name: quiz_grading_requests
+      type: counter
+      description: Number of quiz grading requests
+
+# Grafana Dashboard
+grafana:
+  dashboard_json: |
+    {
+      "title": "EDU_CENTRE AI Dashboard",
+      "panels": [
+        {
+          "title": "Response Latency (p95)",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, rate(ai_latency_bucket[5m]))",
+              "legendFormat": "p95 latency"
+            }
+          ]
+        },
+        {
+          "title": "Tool Calls",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(tool_calls_total[5m])",
+              "legendFormat": "Calls/sec"
+            }
+          ]
+        },
+        {
+          "title": "Intent Distribution",
+          "type": "piechart",
+          "targets": [
+            {
+              "expr": "sum by (intent) (intent_classification_total)",
+              "legendFormat": "{{intent}}"
+            }
+          ]
+        }
+      ]
+    }
+
+# Alerting
+alerts:
+  enabled: true
+  
+  rules:
+    - name: high_latency
+      condition: ai_latency_p95 > 200
+      severity: warning
+      message: "AI response latency exceeds 200ms threshold"
+      
+    - name: node_failure
+      condition: rate(node_errors_total[5m]) > 0.01
+      severity: critical
+      message: "Node failure rate exceeds 1%"
+      
+    - name: tool_failure
+      condition: rate(tool_errors_total[5m]) > 0.05
+      severity: warning
+      message: "Tool failure rate exceeds 5%"
